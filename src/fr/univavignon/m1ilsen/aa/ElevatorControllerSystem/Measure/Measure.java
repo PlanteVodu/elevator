@@ -330,6 +330,7 @@ public class Measure {
 	{
 		String s = "";
 		long[] tab = new long[userNumber];
+		
 		long res = 0;
 		for(int i = 0;i<userNumber;i++)
 		{

@@ -3,7 +3,7 @@ package fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Level.Implem
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Level.Interface.i_Level;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Sensor.Implementation.Sensor;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Sensor.Interface.i_sensor;
-import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceLevel.UserInterfaceLevel;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceLevel.Implementation.*;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Level.Interface.LevelListener;
 
 public class Level implements i_Level {
@@ -12,12 +12,12 @@ public class Level implements i_Level {
 	 * 
 	 */
 	@SuppressWarnings("unused")
-	private i_sensor topSensor;
+	private Sensor topSensor;
 	/**
 	 * 
 	 */
 	@SuppressWarnings("unused")
-	private i_sensor botSensor;
+	private Sensor botSensor;
 	/**
 	 * 
 	 */
@@ -35,7 +35,7 @@ public class Level implements i_Level {
 	 */
 
 	@SuppressWarnings("unused")
-	public UserInterfaceLevel userInterface;
+	public UserInterfaceLevel userInterface ;
 	/**
 	 * 
 	 */
@@ -55,8 +55,13 @@ public class Level implements i_Level {
 		this.extraHeight=extraHeight;
 		this.botSensor= new Sensor(this,0);
 		this.topSensor=new Sensor(this,1);
-		//this.userInterface=new UserInterfaceLevel();
 	 }
+		
+	public void setUserInterfaceLevel(UserInterfaceLevel userInterface )
+	{
+		this.userInterface=userInterface;
+	}
+	
 	/**
 	 * 
 	 * @return 
@@ -77,6 +82,7 @@ public class Level implements i_Level {
 	 * @param id 
 	 */
 	public void SensorSwitched(boolean state, int id) { 
+		System.out.println("sensor");
 		this.listener.LevelTrigger(this.rank*10+id, state);
 	 }
 

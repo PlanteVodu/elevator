@@ -5,18 +5,18 @@ import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Shaft.Door.Im
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Shaft.Door.Interface.i_Door;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Shaft.Motor.Implementation.Motor;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Shaft.Motor.Interface.i_Motor;
-import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceShaft.UserInterfaceShaft;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceShaft.Implementation.*;
 
 public class Shaft implements i_Shaft {
 
 	/**
 	 * 
 	 */
-	private i_Door door;
+	public Door door;
 	/**
 	 * 
 	 */
-	private i_Motor motor;
+	public Motor motor;
 	/**
 	 * 
 	 */
@@ -32,6 +32,11 @@ public class Shaft implements i_Shaft {
 		this.motor=new Motor(speed);
 		//this.userinterface=new UserInterfaceShaft();
 	 }
+	
+	public void setUserInterfaceShaft(UserInterfaceShaft userinterface)
+	{
+		this.userinterface=userinterface;
+	}
 	/**
 	 * 
 	 * @param state 
@@ -39,8 +44,7 @@ public class Shaft implements i_Shaft {
 	 */
 	public void switchMotorState(int state) { 
 		this.motor.switchState(state);
-	
-	 }
+	}
 	/**
 	 * 
 	 * @return 

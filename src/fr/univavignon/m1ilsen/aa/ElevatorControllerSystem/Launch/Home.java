@@ -12,6 +12,8 @@ import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.ControllerSystem.Imple
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Implementation.Elevator;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Interface.ElevatorListener;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Sequencer.Sequencer;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceLevel.Implementation.UserInterfaceLevel;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserInterface.UserInterfaceShaft.Implementation.UserInterfaceShaft;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserSimulation.Implementation.UserSimulation;
 
 import java.awt.event.ActionListener;
@@ -265,13 +267,14 @@ public class Home extends JFrame implements ActionListener {
 
 	public void startSimulation() {
 		// TODO Auto-generated method stub 
-		reset();
+		textArea.append("Simulation commence....\n");
 		int nbLevel=(int) optionNbLevel.getValue();
 		int height=(int) optionHeight.getValue();
 		int speed=(int) optionSpeed.getValue();
 		int extraHeight=(int) optionInterval.getValue();
 		//initialization 
 		Elevator elevator=new Elevator(nbLevel,elevatorlistener,speed,height,extraHeight);
+		
 		String algo;
 		if(rdbtnSjf.isSelected())
 		{
@@ -281,15 +284,25 @@ public class Home extends JFrame implements ActionListener {
 		{
 			algo=rdbtnFifo.getText();
 		}
-		
 		ControllerSystem controllerSystem = new ControllerSystem(algo,elevator);
-		listUser=new ArrayList<UserSimulation>((int)optionUser.getValue());
-		for(int i = 0;i<listUser.size();++i)
+		elevator.setListener(controllerSystem);
+		for(int i = 0 ; i < elevator.listOfLevel.size();++i)
 		{
-			int currLevel=;
-			int lvltogo;
-			listUser.get(i).setCurrentLevel();
+			elevator.listOfLevel.get(i).setUserInterfaceLevel(new UserInterfaceLevel(controllerSystem,elevator));
 		}
+		elevator.shaft.setUserInterfaceShaft(new UserInterfaceShaft(controllerSystem,elevator));
+		totalUser=(int)optionUser.getValue();
+		listUser=new ArrayList<UserSimulation>(totalUser);
+		for(int i = 0;i<totalUser;++i)
+		{
+			int currLevel=(int)(Math.random() * (int)optionNbLevel.getValue());
+			int lvltogo=(int)(Math.random() * (int)optionNbLevel.getValue());
+			UserSimulation user  = new UserSimulation(elevator);
+			user.setCurrentLevel(currLevel);
+			user.setLevelToGo(lvltogo);
+			listUser.add(user);
+		}
+
 		Sequencer.create(1000, 60000, 1, 10,elevator,controllerSystem,listUser);
 		
 		Sequencer.start();		
@@ -301,18 +314,11 @@ public class Home extends JFrame implements ActionListener {
 		optionSpeed.setValue(1);
 		optionSimTime.setValue(1);
 		optionDiala.setValue(1);
+		optionUser.setValue(1);
 		optionContra.setValue(1);
 		optionHeight.setValue(100);
 		optionInterval.setValue(30);
 		optionNbLevel.setValue(1);
-		user1.setSelected(false);
-		user2.setSelected(false);
-		user3.setSelected(false);
-		user4.setSelected(false);
-		user1.setEnabled(false);
-		user2.setEnabled(false);
-		user3.setEnabled(false);
-		user4.setEnabled(false);
 	}
 
 
@@ -334,58 +340,6 @@ public class Home extends JFrame implements ActionListener {
 		{
 			rdbtnSjf.setSelected(false);
 			rdbtnFifo.setSelected(true);
-		}
-		else if(source == user1 )
-		{
-			if(user1.isSelected())
-			{
-				tgtLvlU1.setEnabled(true);
-				currLvlU1.setEnabled(true);
-			}
-			else
-			{
-				tgtLvlU1.setEnabled(false);
-				currLvlU1.setEnabled(false);
-			}
-		}
-		else if(source == user2 )
-		{
-			if(user2.isSelected())
-			{
-				tgtLvlU2.setEnabled(true);
-				currLvlU2.setEnabled(true);
-			}
-			else
-			{
-				tgtLvlU2.setEnabled(false);
-				currLvlU2.setEnabled(false);
-			}
-		}
-		else if(source == user3 )
-		{
-			if(user3.isSelected())
-			{
-				tgtLvlU3.setEnabled(true);
-				currLvlU3.setEnabled(true);
-			}
-			else
-			{
-				tgtLvlU3.setEnabled(false);
-				currLvlU3.setEnabled(false);
-			}
-		}
-		else if(source == user4 )
-		{
-			if(user4.isSelected())
-			{
-				tgtLvlU4.setEnabled(true);
-				currLvlU4.setEnabled(true);
-			}
-			else
-			{
-				tgtLvlU4.setEnabled(false);
-				currLvlU4.setEnabled(false);
-			}
 		}
 	}
 }

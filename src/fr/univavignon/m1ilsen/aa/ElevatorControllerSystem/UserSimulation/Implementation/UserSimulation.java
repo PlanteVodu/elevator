@@ -34,23 +34,25 @@ public class UserSimulation {
 	}
 
 	// User's actions (outside and insinde Elevator)
-	public void Trigger(int level, long date) {
+	public void Trigger(int currLevel, long date) {
 		
 		// Needs to be changed 
+		//System.out.println(elevator.listOfLevel.size());
 
 		if(this.levelToGo > currentLevel) {
-			elevator.listOfLevel.get(level).userInterface.moveUp();
-			elevator.shaft.userinterface.selectLevel(this.levelToGo);
+			elevator.listOfLevel.get(currLevel).userInterface.moveUp(this);
+			elevator.shaft.userinterface.selectLevel(this.levelToGo,this);
+			
 		} else {
-			elevator.listOfLevel.get(level).userInterface.moveDown();
-			elevator.shaft.userinterface.selectLevel(this.levelToGo);
+			elevator.listOfLevel.get(currLevel).userInterface.moveDown(this);
+			elevator.shaft.userinterface.selectLevel(this.levelToGo,this);
 		}
 		
 	}
 
 	// Displays every dates
 	public void Display() {
-		System.out.println("Waiting time outside elevator : " + waitingTimeOutsideElevator);
+		System.out.println("call elevator : " + waitingTimeOutsideElevator);
 		System.out.println("entranceTimeElevator : " + entranceTimeElevator);
 		System.out.println("exitTime : " + exitTime);
 	}
@@ -94,7 +96,7 @@ public class UserSimulation {
 		this.currentLevel = currentLevel;
 	}
 
-	public long getCurrentLevel() {
+	public int getCurrentLevel() {
 		return this.currentLevel;
 	}
 }

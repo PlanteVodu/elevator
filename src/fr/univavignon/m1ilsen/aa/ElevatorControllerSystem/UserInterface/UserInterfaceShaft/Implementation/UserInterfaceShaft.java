@@ -22,7 +22,7 @@ implements i_UserInterfaceShaft, ElevatorListener
 	//---------------------------------------------------------------------------
 	// * Constructor
 	//---------------------------------------------------------------------------
-	UserInterfaceShaft(ControllerSystem controllerSystem, Elevator elevator) {
+	public UserInterfaceShaft(ControllerSystem controllerSystem, Elevator elevator) {
 		this.controllerSystem = controllerSystem;
 		this.elevator = elevator;
 	}

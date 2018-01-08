@@ -9,6 +9,7 @@ import java.util.LinkedList;
 
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.ControllerSystem.Implementation.ControllerSystem;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Implementation.Elevator;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Measure.Measure;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserSimulation.Implementation.UserSimulation;
 
 public class Sequencer {
@@ -17,18 +18,24 @@ public class Sequencer {
 	static long duree;
 	static int dilatation;
 	static int contraction;
+	static long ecoule;
+	static long debut;
 	static LinkedList<Process> process;
 	static ArrayList<UserSimulation> userList;
 	static Elevator elevator;
 	static ControllerSystem controllerSystem;
 
+	public static long getCurrentTime()
+	{
+		 return (System.currentTimeMillis()-debut)/dilatation*contraction;
+	}
 	/**
 	 * @throws InterruptedException 
 	 *
 	 */
 	public static void start(){ 
-		long debut=System.currentTimeMillis();
-		long ecoule=0;
+		debut=System.currentTimeMillis();
+		ecoule=0;
 		long temp=periode;
 		
 		try {
@@ -43,19 +50,27 @@ public class Sequencer {
 			System.out.print("en cours \n");
 			do 
 			{
-				if(ecoule==temp)
-				{
+				
 					res.write("----------\n");
 					res.write(""+ecoule/1000+" seconde\n");
-					System.out.println(ecoule);
-					
+					for(int i = 0;i<userList.size();i++)
+					{
+						userList.get(i).Trigger(userList.get(i).getCurrentLevel(), getCurrentTime());
+					}
 					temp+=periode;
-				}
+				
 				ecoule=(System.currentTimeMillis()-debut)/dilatation*contraction;
+			
 			}while(ecoule/1000<=duree/1000);
 			res.write("----------\n");
 			res.write("This is the end");
 			res.close();
+			for(int i =0 ; i< userList.size();i++)
+			{
+				userList.get(i).Display();
+			}
+			//Measure m = new Measure("stat.txt",userList);
+			//m.allTime(userList);
 			System.out.println("Finit");
 		}
 		catch (IOException e) {

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.ControllerSystem.Interface.ControllerSystem_Interface;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Implementation.Elevator;
 import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Elevator.Interface.ElevatorListener;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.Sequencer.Sequencer;
+import fr.univavignon.m1ilsen.aa.ElevatorControllerSystem.UserSimulation.Implementation.UserSimulation;
 
 
 public class ControllerSystem implements ControllerSystem_Interface,ElevatorListener
@@ -34,16 +36,17 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 	{
 		this.algorithm = algo;
 		this.elevator = elevator;
+		this.calledLevel=new ArrayList<Request>();
 	}
 	
 	
 	//Ajouter une demande depuis l'extérieur de l'ascenseur.
 	@Override
-	public void callAtLevel(int level,int sens)
+	public void callAtLevel(int level,int sens, UserSimulation userSimulation)
 	{
 		boolean exist=false;
 			
-		demande = new Request(level, sens);
+		demande = new Request(level, sens,userSimulation);
 		//si la demmande exist deja on ne stock pas la commande
 		for (int i = 0; i < calledLevel.size(); i++)
 		{
@@ -59,16 +62,17 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 		
 		calledLevel.add(demande);
 		}
+		choseLevel();
 	}
 
 	
 	//Ajouter une demande depuis l'intérieur de l'ascenseur.
 	@Override
-	public void goToLevel(int level)
+	public void goToLevel(int level,UserSimulation user)
 	{
 		//boolean qui nous permet savoir si la commande exist deja ou pas
 		boolean exist=false;			
-		demande = new Request(level, 0);
+		demande = new Request(level, 0,user);
 		
 		//si la demande exist deja on ne stock pas la commande
 		for (int i = 0; i < calledLevel.size(); i++)
@@ -81,8 +85,9 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 		//si la commande n'exist pas on l'ajoute a notre liste
 		if (!exist)
 		{			
-		calledLevel.add(demande);
+			calledLevel.add(demande);
 		}
+		choseLevel();
 	 }
 
 	
@@ -90,6 +95,7 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 	@Override
 	public void choseLevel()
 	{
+
 		int maxint=100;
 		//stocke la variable qui stock l'indice de la commande la plus optimiser à traiter
 		int stocki=0;
@@ -109,7 +115,7 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 			}
 			//on recupere la commande la plus optimser pour la traiter
 			currentRequest=calledLevel.get(stocki);
-			
+			currentRequest.user.setWaitingTimeOutsideElevator(Sequencer.getCurrentTime());
 			/*on teste si l'etage actuel est plus grand que la cammande en cours on move vers le bas
 			 * sinon on move vers le haut
 			 */
@@ -125,7 +131,8 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 			{	
 				//on execute toujour la 1ere commande car c'est la premiere
 				currentRequest=calledLevel.get(0);
-					
+				currentRequest.user.setWaitingTimeOutsideElevator(Sequencer.getCurrentTime());
+	
 					if (currentLevel > currentRequest.level)
 					{
 						elevator.switchMotorState(-1);
@@ -135,10 +142,12 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 			
 		}
 	
+	
 	//Fonction trigger par l'ascenseur quand il change d'étage
 	@Override
-	public void  ElevatorTrigger(int level)
+	public void ElevatorTrigger(int level)
 	{
+		System.out.println("im here");
 		//l'etage actuel recuper par l'ascensseur
 		currentLevel=level;
 		
@@ -146,6 +155,7 @@ public class ControllerSystem implements ControllerSystem_Interface,ElevatorList
 		//si on arrive à l'etage souhaiter on arrete l'asensseur
 		if (currentLevel==currentRequest.level) 
 		{
+			currentRequest.user.setExitTime(Sequencer.getCurrentTime());
 			//stopper l'ascensseur
 			elevator.switchMotorState(0);
 			//si la position de l'ascensseur = a la demande en cour on arrete l'ascenssuer et on suprime la demande

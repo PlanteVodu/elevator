@@ -1,0 +1,14 @@
+Nombre d'utilisateurs : 4 
+Pour le temps d'attente hors de l'ascenseur : 
+Valeur maximale : 0 secondes 
+Valeur minimale : 0 secondes 
+Temps moyen d'attente : 0 secondes 
+Temps median d'attente : 0 secondes 
+Il y a une etendue de : 0 secondes 
+
+Pour le temps d'attente dans l'ascenseur : 
+Valeur maximale : 0 secondes 
+Valeur minimale : -60 secondes 
+Temps moyen d'attente : -60 secondes 
+Temps median d'attente : -60 secondes 
+Il y a une etendue de : 60 secondes 
