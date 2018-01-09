@@ -49,16 +49,18 @@ public class Sequencer {
 
 			System.out.print("en cours \n");
 			do 
-			{
-				
+			{	
+				if(ecoule==temp)
+				{
 					res.write("----------\n");
 					res.write(""+ecoule/1000+" seconde\n");
-					for(int i = 0;i<userList.size();i++)
+					System.out.println(ecoule);
+					/*for(int i=0;i<userList.size();++i)
 					{
-						userList.get(i).Trigger(userList.get(i).getCurrentLevel(), getCurrentTime());
-					}
+						userList.get(i).Trigger(userList.get(i).getCurrentLevel(),getCurrentTime() );
+					}*/
 					temp+=periode;
-				
+				}
 				ecoule=(System.currentTimeMillis()-debut)/dilatation*contraction;
 			
 			}while(ecoule/1000<=duree/1000);
